@@ -55,22 +55,22 @@
   };
 </script>
 
-  <meta name="description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 用了缓存之后会有什">
+  <meta name="description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 #用了缓存之后会有">
 <meta name="keywords" content="redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="缓存">
 <meta property="og:url" content="http://yoursite.com/2019/10/08/缓存/index.html">
 <meta property="og:site_name" content="肤黑猿修仙录">
-<meta property="og:description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 用了缓存之后会有什">
+<meta property="og:description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 #用了缓存之后会有">
 <meta property="og:locale" content="zh-cn">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-junior-inconsistent.png">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-penetration.png">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-avalanche.png">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-avalanche-solution.png">
-<meta property="og:updated_time" content="2019-10-08T08:36:35.458Z">
+<meta property="og:updated_time" content="2019-10-08T08:38:29.821Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="缓存">
-<meta name="twitter:description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 用了缓存之后会有什">
+<meta name="twitter:description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 #用了缓存之后会有">
 <meta name="twitter:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-junior-inconsistent.png">
   <link rel="canonical" href="http://yoursite.com/2019/10/08/缓存/">
 
@@ -231,7 +231,7 @@
                 
               
 
-              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:36:35" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
+              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:38:29" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
             </span>
           
             
@@ -259,7 +259,8 @@
 <h3 id="高性能"><a href="#高性能" class="headerlink" title="高性能"></a>高性能</h3><p>对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。</p>
 <h3 id="高并发"><a href="#高并发" class="headerlink" title="高并发"></a>高并发</h3><p>mysql 单机支撑到 <code>2000QPS</code> 也开始容易报警了。</p>
 <p>缓存是走内存的，内存天然就支撑高并发。</p>
-<h1 id="用了缓存之后会有什么不良后果？"><a href="#用了缓存之后会有什么不良后果？" class="headerlink" title="用了缓存之后会有什么不良后果？"></a>用了缓存之后会有什么不良后果？</h1><h2 id="缓存与数据库双写不一致问题"><a href="#缓存与数据库双写不一致问题" class="headerlink" title="缓存与数据库双写不一致问题"></a>缓存与数据库双写不一致问题</h2><blockquote>
+<p>#用了缓存之后会有什么不良后果？</p>
+<h2 id="缓存与数据库双写不一致问题"><a href="#缓存与数据库双写不一致问题" class="headerlink" title="缓存与数据库双写不一致问题"></a>缓存与数据库双写不一致问题</h2><blockquote>
 <p>如何保证缓存与数据库双写一致性？</p>
 </blockquote>
 <p>###Cache Aside Pattern</p>
@@ -412,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么用缓存？"><span class="nav-number">1.</span> <span class="nav-text">为什么用缓存？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高性能"><span class="nav-number">1.0.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高并发"><span class="nav-number">1.0.2.</span> <span class="nav-text">高并发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用了缓存之后会有什么不良后果？"><span class="nav-number">2.</span> <span class="nav-text">用了缓存之后会有什么不良后果？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存与数据库双写不一致问题"><span class="nav-number">2.1.</span> <span class="nav-text">缓存与数据库双写不一致问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么用缓存？"><span class="nav-number">1.</span> <span class="nav-text">为什么用缓存？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高性能"><span class="nav-number">1.0.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高并发"><span class="nav-number">1.0.2.</span> <span class="nav-text">高并发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存与数据库双写不一致问题"><span class="nav-number">1.1.</span> <span class="nav-text">缓存与数据库双写不一致问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->

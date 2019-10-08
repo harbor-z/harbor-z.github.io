@@ -225,7 +225,7 @@
                 
               
 
-              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:36:35" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
+              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:38:29" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
             </span>
           
             
@@ -253,7 +253,8 @@
 <h3 id="高性能"><a href="#高性能" class="headerlink" title="高性能"></a>高性能</h3><p>对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。</p>
 <h3 id="高并发"><a href="#高并发" class="headerlink" title="高并发"></a>高并发</h3><p>mysql 单机支撑到 <code>2000QPS</code> 也开始容易报警了。</p>
 <p>缓存是走内存的，内存天然就支撑高并发。</p>
-<h1 id="用了缓存之后会有什么不良后果？"><a href="#用了缓存之后会有什么不良后果？" class="headerlink" title="用了缓存之后会有什么不良后果？"></a>用了缓存之后会有什么不良后果？</h1><h2 id="缓存与数据库双写不一致问题"><a href="#缓存与数据库双写不一致问题" class="headerlink" title="缓存与数据库双写不一致问题"></a>缓存与数据库双写不一致问题</h2><blockquote>
+<p>#用了缓存之后会有什么不良后果？</p>
+<h2 id="缓存与数据库双写不一致问题"><a href="#缓存与数据库双写不一致问题" class="headerlink" title="缓存与数据库双写不一致问题"></a>缓存与数据库双写不一致问题</h2><blockquote>
 <p>如何保证缓存与数据库双写一致性？</p>
 </blockquote>
 <p>###Cache Aside Pattern</p>
