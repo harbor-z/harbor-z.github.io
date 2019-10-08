@@ -67,7 +67,7 @@
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-penetration.png">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-avalanche.png">
 <meta property="og:image" content="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-avalanche-solution.png">
-<meta property="og:updated_time" content="2019-10-08T08:30:29.721Z">
+<meta property="og:updated_time" content="2019-10-08T08:36:35.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="缓存">
 <meta name="twitter:description" content="为什么要用缓存？ 缓存使用不当会造成什么后果？ 项目中缓存是如何使用的？  为什么用缓存？用缓存，主要有两个用途：高性能、高并发。 高性能对于一些需要复杂操作耗时查出来的结果，且确定后面不怎么变化，但是有很多读请求，那么直接将查询出来的结果放在缓存中，后面直接读缓存就好。 高并发mysql 单机支撑到 2000QPS 也开始容易报警了。 缓存是走内存的，内存天然就支撑高并发。 用了缓存之后会有什">
@@ -231,7 +231,7 @@
                 
               
 
-              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:30:29" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
+              <time title="Created: 2019-10-08 13:47:52 / Modified: 16:36:35" itemprop="dateCreated datePublished" datetime="2019-10-08T13:47:52+08:00">2019-10-08</time>
             </span>
           
             
@@ -269,7 +269,8 @@
 <li>更新的时候，先<strong>删除缓存</strong>，后更新数据库。</li>
 </ul>
 </blockquote>
-<h4 id="为什么要删除缓存而不是更新缓存？"><a href="#为什么要删除缓存而不是更新缓存？" class="headerlink" title="为什么要删除缓存而不是更新缓存？"></a>为什么要删除缓存而不是更新缓存？</h4><ol>
+<p>####为什么要删除缓存而不是更新缓存？</p>
+<ol>
 <li><p>缓存不单单是数据库中直接取出来的值。</p>
 <p>比如可能更新了某个表的一个字段，然后其对应的缓存，是需要查询另外两个表的数据并进行运算，才能计算出缓存最新的值的。</p>
 </li>
@@ -289,7 +290,8 @@
 <p>另一种解决方案是使用队列辅助。先更新数据库，再删除缓存。如果删除失败，就放进队列。然后另一个任务从队列中取出消息，不断去重试删除相应的key。</p>
 <p>还有一种解决方案是使用对一个数据使用一个队列，使读写操作串行化。比如对id为n的数据建立一个队列。对这条数据的写操作，删除缓存后，放进一个队列；然后另一个线程过来了，发现没有缓存，则把这个读操作也放进这个队列里面。</p>
 <p>不过这样会增加程序的复杂性，串行化也会降低程序的吞吐量，可能得不偿失。<strong>一般主流的解决方案还是先删除缓存，再更新数据库</strong>。可以满足绝大部分需求。</p>
-<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>我们在使用缓存时，往往先尝试去缓存中取值，如果没有，再去数据库取值，如果数据库也没有值，则根据业务需求，返回空或者抛异常。</p>
+<p>##缓存穿透</p>
+<p>我们在使用缓存时，往往先尝试去缓存中取值，如果没有，再去数据库取值，如果数据库也没有值，则根据业务需求，返回空或者抛异常。</p>
 <p>如果用户<strong>一直访问一个数据库不存在的数据</strong>，比如id为-1的数据，就会导致每次请求都会先去缓存查一次，然后再去数据库查一次，造成严重的性能问题。这种情况就叫<strong>缓存穿透</strong>。</p>
 <p><img src="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-penetration.png" alt="redis-caching-penetration"></p>
 <p>以下几种解决方案：</p>
@@ -301,13 +303,17 @@
 <li><p>使用布隆过滤器，判断一个key是否已经查过了，如果已经查过了，就不去数据库查询。</p>
 </li>
 </ul>
-<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>缓存击穿指的是，<strong>一个key</strong>的访问量非常大，比如某秒杀活动，有1w/s的并发量。<strong>这个key在某一时刻过期</strong>，那这些大量的请求就会一瞬间到数据库，数据库可能会直接崩溃。</p>
+<p>##缓存击穿</p>
+<p>缓存击穿指的是，<strong>一个key</strong>的访问量非常大，比如某秒杀活动，有1w/s的并发量。<strong>这个key在某一时刻过期</strong>，那这些大量的请求就会一瞬间到数据库，数据库可能会直接崩溃。</p>
 <p>缓存击穿的解决方案也有几种，可以配合使用：</p>
 <ul>
-<li>对于热点数据，慎重考虑过期时间，确保热点期间key不会过期，甚至有些可以设置永不过期。</li>
-<li>使用互斥锁（比如Java的多线程锁机制），第一个线程访问key的时候就锁住，等查询数据库返回后，把值插入到缓存后再释放锁，这样后面的请求就可以直接取缓存里面的数据了。</li>
+<li><p>对于热点数据，慎重考虑过期时间，确保热点期间key不会过期，甚至有些可以设置永不过期。</p>
+</li>
+<li><p>使用互斥锁（比如Java的多线程锁机制），第一个线程访问key的时候就锁住，等查询数据库返回后，把值插入到缓存后再释放锁，这样后面的请求就可以直接取缓存里面的数据了。</p>
+</li>
 </ul>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><ol>
+<p>##缓存雪崩</p>
+<ol>
 <li>缓存服务器宕机。</li>
 </ol>
 <p>​    <img src="https://doocs.github.io/advanced-java/docs/high-concurrency/images/redis-caching-avalanche.png" alt="redis-caching-avalanche"></p>
@@ -334,7 +340,8 @@
 <p>解决方案：对每个key的过期时间设置一个随机值，而不是所有key都相同。</p>
 </li>
 </ol>
-<h1 id="项目中缓存是如何使用的？"><a href="#项目中缓存是如何使用的？" class="headerlink" title="项目中缓存是如何使用的？"></a>项目中缓存是如何使用的？</h1><p>待完成</p>
+<p>#项目中缓存是如何使用的？</p>
+<p>待完成</p>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><blockquote>
 <p><a href="[https://doocs.github.io/advanced-java/#/docs/high-concurrency/why-cache?id=%e9%a1%b9%e7%9b%ae%e4%b8%ad%e7%bc%93%e5%ad%98%e6%98%af%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8%e7%9a%84%ef%bc%9f](https://doocs.github.io/advanced-java/#/docs/high-concurrency/why-cache?id=项目中缓存是如何使用的？)">互联网 Java 工程师进阶知识完全扫盲</a></p>
 <p><a href="https://juejin.im/post/5d9bddef51882509751b1306" target="_blank" rel="noopener">缓存常见问题及解决方案</a></p>
@@ -405,7 +412,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么用缓存？"><span class="nav-number">1.</span> <span class="nav-text">为什么用缓存？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高性能"><span class="nav-number">1.0.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高并发"><span class="nav-number">1.0.2.</span> <span class="nav-text">高并发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用了缓存之后会有什么不良后果？"><span class="nav-number">2.</span> <span class="nav-text">用了缓存之后会有什么不良后果？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存与数据库双写不一致问题"><span class="nav-number">2.1.</span> <span class="nav-text">缓存与数据库双写不一致问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要删除缓存而不是更新缓存？"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">为什么要删除缓存而不是更新缓存？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存穿透"><span class="nav-number">2.2.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存击穿"><span class="nav-number">2.3.</span> <span class="nav-text">缓存击穿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">2.4.</span> <span class="nav-text">缓存雪崩</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目中缓存是如何使用的？"><span class="nav-number">3.</span> <span class="nav-text">项目中缓存是如何使用的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么用缓存？"><span class="nav-number">1.</span> <span class="nav-text">为什么用缓存？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高性能"><span class="nav-number">1.0.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高并发"><span class="nav-number">1.0.2.</span> <span class="nav-text">高并发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用了缓存之后会有什么不良后果？"><span class="nav-number">2.</span> <span class="nav-text">用了缓存之后会有什么不良后果？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存与数据库双写不一致问题"><span class="nav-number">2.1.</span> <span class="nav-text">缓存与数据库双写不一致问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
